@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UserService } from './shared/user.service';
 
 //Components
@@ -14,6 +14,10 @@ import { SignInComponent } from './user/sign-in/sign-in.component';
 //Routes
 import { AppRoutingModule } from './app-routing.module';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+
+//Others
+import { AuthGuard } from './auth/auth.guard';
+import { AuthInterceptor } from './auth/auth.interceptor'
 
 @NgModule({
   declarations: [
@@ -29,7 +33,11 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [UserService],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  },AuthGuard, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
